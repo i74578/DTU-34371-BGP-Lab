@@ -1,0 +1,42 @@
+services:
+  router1:
+    image: alpine
+    container_name: router1
+    command: tail -f /dev/null
+    networks:
+      - net-router1-router2
+      - net-router1-router3
+
+  router2:
+    image: alpine
+    container_name: router2
+    command: tail -f /dev/null
+    networks:
+      - net-router1-router2
+      - net-router2-router4
+
+  router3:
+    image: alpine
+    container_name: router3
+    command: tail -f /dev/null
+    networks:
+      - net-router1-router3
+      - net-router3-router4
+
+  router4:
+    image: alpine
+    container_name: router4
+    command: tail -f /dev/null
+    networks:
+      - net-router2-router4
+      - net-router3-router4
+
+networks:
+  net-router1-router2:
+    driver: bridge
+  net-router1-router3:
+    driver: bridge
+  net-router2-router4:
+    driver: bridge
+  net-router3-router4:
+    driver: bridge
