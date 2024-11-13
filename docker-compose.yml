@@ -1,42 +1,74 @@
 services:
   router1:
-    image: alpine
+    image: openbgpd/openbgpd:latest
     container_name: router1
-    command: tail -f /dev/null
+    volumes:
+     - ./configs/router1/bgpd.conf:/etc/bgpd/bgpd.conf
+    ports:
+      - "127.0.0.1:1791:179"
+      - "127.0.0.1:9091:9099"
     networks:
-      - net-router1-router2
-      - net-router1-router3
+      net-router1-router2:
+        ipv4_address: 10.123.12.1
+      net-router1-router3:
+        ipv4_address: 10.123.13.1
 
   router2:
-    image: alpine
+    image: openbgpd/openbgpd:latest
     container_name: router2
-    command: tail -f /dev/null
+    volumes:
+     - ./configs/router2/bgpd.conf:/etc/bgpd/bgpd.conf
+    ports:
+      - "127.0.0.1:1792:179"
+      - "127.0.0.1:9092:9099"
     networks:
-      - net-router1-router2
-      - net-router2-router4
+      net-router1-router2:
+        ipv4_address: 10.123.12.2
+      net-router2-router4:
+        ipv4_address: 10.123.24.2
 
   router3:
-    image: alpine
+    image: openbgpd/openbgpd:latest
     container_name: router3
-    command: tail -f /dev/null
+    volumes:
+     - ./configs/router3/bgpd.conf:/etc/bgpd/bgpd.conf
+    ports:
+      - "127.0.0.1:1793:179"
+      - "127.0.0.1:9093:9099"
     networks:
-      - net-router1-router3
-      - net-router3-router4
+      net-router1-router3:
+        ipv4_address: 10.123.13.3
+      net-router3-router4:
+        ipv4_address: 10.123.34.3
 
   router4:
-    image: alpine
+    image: openbgpd/openbgpd:latest
     container_name: router4
-    command: tail -f /dev/null
+    volumes:
+     - ./configs/router4/bgpd.conf:/etc/bgpd/bgpd.conf
+    ports:
+      - "127.0.0.1:1794:179"
+      - "127.0.0.1:9094:9099"
     networks:
-      - net-router2-router4
-      - net-router3-router4
+      net-router2-router4:
+        ipv4_address: 10.123.24.4
+      net-router3-router4:
+        ipv4_address: 10.123.34.4
 
 networks:
   net-router1-router2:
-    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.123.12.0/24
   net-router1-router3:
-    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.123.13.0/24
   net-router2-router4:
-    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.123.24.0/24
   net-router3-router4:
-    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.123.34.0/24
