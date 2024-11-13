@@ -1,74 +1,76 @@
-services:
-  router1:
-    image: openbgpd/openbgpd:latest
-    container_name: router1
-    volumes:
-     - ./configs/router1/bgpd.conf:/etc/bgpd/bgpd.conf
-    ports:
-      - "127.0.0.1:8001:179"
-      - "127.0.0.1:8011:9099"
-    networks:
-      net-router1-router2:
-        ipv4_address: 10.123.12.11
-      net-router1-router3:
-        ipv4_address: 10.123.13.11
-
-  router2:
-    image: openbgpd/openbgpd:latest
-    container_name: router2
-    volumes:
-     - ./configs/router2/bgpd.conf:/etc/bgpd/bgpd.conf
-    ports:
-      - "8002:179"
-      - "8012:9099"
-    networks:
-      net-router1-router2:
-        ipv4_address: 10.123.12.22
-      net-router2-router4:
-        ipv4_address: 10.123.24.22
-
-  router3:
-    image: openbgpd/openbgpd:latest
-    container_name: router3
-    volumes:
-     - ./configs/router3/bgpd.conf:/etc/bgpd/bgpd.conf
-    ports:
-      - "8003:179"
-      - "8013:9099"
-    networks:
-      net-router1-router3:
-        ipv4_address: 10.123.13.33
-      net-router3-router4:
-        ipv4_address: 10.123.34.33
-
-  router4:
-    image: openbgpd/openbgpd:latest
-    container_name: router4
-    volumes:
-     - ./configs/router4/bgpd.conf:/etc/bgpd/bgpd.conf
-    ports:
-      - "8004:179"
-      - "8014:9099"
-    networks:
-      net-router2-router4:
-        ipv4_address: 10.123.24.44
-      net-router3-router4:
-        ipv4_address: 10.123.34.44
-
 networks:
-  net-router1-router2:
-    ipam:
+   net-as65001:
+     name: net-as65001
+     ipam:
       config:
-        - subnet: 10.123.12.0/24
-  net-router1-router3:
-    ipam:
+        - subnet: 13.37.0.0/24
+          gateway: 13.37.0.254
+   net-as65002:
+     name: net-as65002
+     ipam:
       config:
-        - subnet: 10.123.13.0/24
-  net-router2-router4:
-    ipam:
-      config:
-        - subnet: 10.123.24.0/24
-  net-router3-router4:
-    ipam:
-      config:
-        - subnet: 10.123.34.0/24
+        - subnet: 40.4.0.0/24
+          gateway: 40.4.0.254
+
+services:
+  router-1:
+    image: openbgpd/openbgpd:latest
+    container_name: router-1
+    networks:
+      net-as65001:
+        ipv4_address: 13.37.0.1
+    cap_add:
+        - ALL
+    sysctls:
+        - net.ipv4.ip_forward=1
+    volumes:
+      - ./config/bgpd1.conf:/etc/bgpd/bgpd.conf
+    command: sh -c "
+                ip route del default &&
+                ip route add default via 13.37.0.1 &&
+                /entrypoint.sh bgpd -d -v
+             "
+
+  router-2:
+    image: openbgpd/openbgpd:latest
+    container_name: router-2
+    networks:
+     net-as65002:
+        ipv4_address: 40.4.0.1
+    cap_add:
+        - ALL
+    sysctls:
+        - net.ipv4.ip_forward=1
+    volumes:
+      - ./config/bgpd2.conf:/etc/bgpd/bgpd.conf
+    command: sh -c "
+                ip route del default &&
+                ip route add default via 40.4.0.1 &&
+                /entrypoint.sh bgpd -d -v
+             "
+
+  host-1:
+    image: alpine
+    container_name: host-1
+    networks:
+      net-as65001:
+        ipv4_address: 13.37.0.10
+    cap_add:
+        - NET_ADMIN 
+    command: sh -c "
+                ip route del default &&
+                ip route add default via 13.37.0.1 &&
+                while true; do sleep 3600; done"
+  host-2:
+    image: alpine
+    container_name: host-2
+    networks:
+      net-as65002:
+        ipv4_address: 40.4.0.10
+    cap_add:
+        - NET_ADMIN 
+    command: sh -c "
+                ip route del default &&
+                ip route add default via 40.4.0.1 &&
+                while true; do sleep 3600; done"
+
