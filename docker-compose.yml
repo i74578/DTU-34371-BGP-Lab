@@ -5,13 +5,13 @@ services:
     volumes:
      - ./configs/router1/bgpd.conf:/etc/bgpd/bgpd.conf
     ports:
-      - "127.0.0.1:1791:179"
-      - "127.0.0.1:9091:9099"
+      - "127.0.0.1:8001:179"
+      - "127.0.0.1:8011:9099"
     networks:
       net-router1-router2:
-        ipv4_address: 10.123.12.1
+        ipv4_address: 10.123.12.11
       net-router1-router3:
-        ipv4_address: 10.123.13.1
+        ipv4_address: 10.123.13.11
 
   router2:
     image: openbgpd/openbgpd:latest
@@ -19,13 +19,13 @@ services:
     volumes:
      - ./configs/router2/bgpd.conf:/etc/bgpd/bgpd.conf
     ports:
-      - "127.0.0.1:1792:179"
-      - "127.0.0.1:9092:9099"
+      - "8002:179"
+      - "8012:9099"
     networks:
       net-router1-router2:
-        ipv4_address: 10.123.12.2
+        ipv4_address: 10.123.12.22
       net-router2-router4:
-        ipv4_address: 10.123.24.2
+        ipv4_address: 10.123.24.22
 
   router3:
     image: openbgpd/openbgpd:latest
@@ -33,13 +33,13 @@ services:
     volumes:
      - ./configs/router3/bgpd.conf:/etc/bgpd/bgpd.conf
     ports:
-      - "127.0.0.1:1793:179"
-      - "127.0.0.1:9093:9099"
+      - "8003:179"
+      - "8013:9099"
     networks:
       net-router1-router3:
-        ipv4_address: 10.123.13.3
+        ipv4_address: 10.123.13.33
       net-router3-router4:
-        ipv4_address: 10.123.34.3
+        ipv4_address: 10.123.34.33
 
   router4:
     image: openbgpd/openbgpd:latest
@@ -47,13 +47,13 @@ services:
     volumes:
      - ./configs/router4/bgpd.conf:/etc/bgpd/bgpd.conf
     ports:
-      - "127.0.0.1:1794:179"
-      - "127.0.0.1:9094:9099"
+      - "8004:179"
+      - "8014:9099"
     networks:
       net-router2-router4:
-        ipv4_address: 10.123.24.4
+        ipv4_address: 10.123.24.44
       net-router3-router4:
-        ipv4_address: 10.123.34.4
+        ipv4_address: 10.123.34.44
 
 networks:
   net-router1-router2:
