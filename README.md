@@ -1,6 +1,10 @@
 # BGP-Lab
 ---
 
+## Running the lab
+To run the lab enter the directory and run
+```sudo docker compose up```
+
 ## The idea:
 
 The idea is to create multiple autonomous systems, each with there own routers and clients. Theses AS should be able to talk to each other using the BGP protocol (specifically Openbgp).
