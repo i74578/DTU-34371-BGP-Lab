@@ -59,7 +59,10 @@ services:
              "
 
   router-2:
-    image: openbgpd/openbgpd:8.3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openbgpp-scapy
     container_name: router-2
     networks:
       net-as1-as2:
@@ -72,11 +75,11 @@ services:
         - net.ipv4.ip_forward=1
     volumes:
       - ./config/bgpd2.conf:/etc/bgpd/bgpd.conf
+      - ./attack-scripts:/attack-scripts
     command: sh -c "
                 ip route del default &&
                 /entrypoint.sh bgpd -d -v
              "
-
   router-3:
     image: openbgpd/openbgpd:8.3
     container_name: router-3
