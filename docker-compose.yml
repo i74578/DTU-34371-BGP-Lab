@@ -38,7 +38,7 @@ networks:
 
 services:
   router-1:
-    image: openbgpd/openbgpd:latest
+    image: openbgpd/openbgpd:8.3
     container_name: router-1
     networks:
       net-c1-as1:
@@ -59,7 +59,7 @@ services:
              "
 
   router-2:
-    image: openbgpd/openbgpd:latest
+    image: openbgpd/openbgpd:8.3
     container_name: router-2
     networks:
       net-as1-as2:
@@ -78,7 +78,7 @@ services:
              "
 
   router-3:
-    image: openbgpd/openbgpd:latest
+    image: openbgpd/openbgpd:8.3
     container_name: router-3
     networks:
       net-as1-as3:
@@ -97,7 +97,7 @@ services:
              "
 
   router-4:
-    image: openbgpd/openbgpd:latest
+    image: openbgpd/openbgpd:8.3
     container_name: router-4
     networks:
       net-as2-as4:
