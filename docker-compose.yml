@@ -44,7 +44,7 @@ networks:
 
 services:
   router-1:
-    image: banjo/bgp:v1
+    image: openbgpd/openbgpd:8.3
     container_name: router-1
     networks:
       net-c1-as1:
@@ -65,7 +65,7 @@ services:
              "
 
   router-2:
-    image: banjo/bgp:v1
+    image: openbgpd/openbgpd:8.3
     container_name: router-2
     networks:
       net-as1-as2:
@@ -84,7 +84,7 @@ services:
              "
 
   router-3:
-    image: banjo/bgp:v1
+    image: openbgpd/openbgpd:8.3
     container_name: router-3
     networks:
       net-as1-as3:
@@ -105,7 +105,7 @@ services:
              "
 
   router-4:
-    image: banjo/bgp:v1
+    image: openbgpd/openbgpd:8.3
     container_name: router-4
     networks:
       #net-as2-as4:
@@ -139,7 +139,7 @@ services:
                 while true; do sleep 3600; done"
 
   host-2:
-    image: alpine
+    image: openbgpp-scapy
     container_name: host-2
     networks:
       net-c2-as4:
