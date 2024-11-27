@@ -5,6 +5,12 @@ networks:
       config:
         - subnet: 10.201.1.0/24
           gateway: 10.201.1.254
+  net-as2-as3:
+    name: net-as2-as3
+    ipam:
+      config:
+        - subnet: 10.2.3.0/24
+          gateway: 10.2.3.254
   net-as1-as2:
     name: net-as1-as2
     ipam:
@@ -38,7 +44,7 @@ networks:
 
 services:
   router-1:
-    image: openbgpd/openbgpd:8.3
+    image: banjo/bgp:v1
     container_name: router-1
     networks:
       net-c1-as1:
@@ -59,13 +65,13 @@ services:
              "
 
   router-2:
-    image: openbgpd/openbgpd:8.3
+    image: banjo/bgp:v1
     container_name: router-2
     networks:
       net-as1-as2:
         ipv4_address: 10.1.2.2
-      net-as2-as4:
-        ipv4_address: 10.2.4.2
+      net-as2-as3:
+        ipv4_address: 10.2.3.2
     cap_add:
         - ALL
     sysctls:
@@ -78,11 +84,13 @@ services:
              "
 
   router-3:
-    image: openbgpd/openbgpd:8.3
+    image: banjo/bgp:v1
     container_name: router-3
     networks:
       net-as1-as3:
         ipv4_address: 10.1.3.3
+      net-as2-as3:
+        ipv4_address: 10.2.3.3
       net-as3-as4:
         ipv4_address: 10.3.4.3
     cap_add:
@@ -97,11 +105,11 @@ services:
              "
 
   router-4:
-    image: openbgpd/openbgpd:8.3
+    image: banjo/bgp:v1
     container_name: router-4
     networks:
-      net-as2-as4:
-        ipv4_address: 10.2.4.4
+      #net-as2-as4:
+      #  ipv4_address: 10.2.4.4
       net-as3-as4:
         ipv4_address: 10.3.4.4
       net-c2-as4:
