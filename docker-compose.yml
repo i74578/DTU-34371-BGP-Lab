@@ -84,6 +84,7 @@ services:
       - ./attack-scripts:/attack-scripts
     command: sh -c "
                 ip route del default &&
+                route add -net 10.202.4.0/24 gw 10.2.3.3 &&
                 /entrypoint.sh bgpd -d -v
              "
   router-3:
