@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ip route del 10.202.4.0/24
+ip route add 10.202.4.0/24 via 10.2.3.3
