@@ -11,6 +11,12 @@ networks:
       config:
         - subnet: 10.2.3.0/24
           gateway: 10.2.3.254
+  net-as1-as4:
+    name: net-as1-as4
+    ipam:
+      config:
+        - subnet: 10.1.4.0/24
+          gateway: 10.1.4.254
   net-as1-as2:
     name: net-as1-as2
     ipam:
@@ -49,8 +55,8 @@ services:
     networks:
       net-c1-as1:
         ipv4_address: 10.201.1.1
-      net-as1-as2:
-        ipv4_address: 10.1.2.1
+      net-as1-as4:
+        ipv4_address: 10.1.4.1
       net-as1-as3:
         ipv4_address: 10.1.3.1
     cap_add:
@@ -70,12 +76,12 @@ services:
     image: openbgpd-iptables
     container_name: router-2
     networks:
-      net-as1-as2:
-        ipv4_address: 10.1.2.2
+      #net-as1-as2:
+      #  ipv4_address: 10.1.2.2
       net-as2-as3:
         ipv4_address: 10.2.3.2
-      #net-as2-as4:
-      #  ipv4_address: 10.2.4.2
+      net-as2-as4:
+        ipv4_address: 10.2.4.2
     cap_add:
         - ALL
     sysctls:
@@ -84,7 +90,6 @@ services:
       - ./config/bgpd2.conf:/etc/bgpd/bgpd.conf
     command: sh -c "
                 ip route del default &&
-                ip route add 10.202.4.0/24 via 10.2.3.3 &&
                 nginx -g 'daemon on;' &&
                 /entrypoint.sh bgpd -d -v
              "
@@ -96,8 +101,8 @@ services:
         ipv4_address: 10.1.3.3
       net-as2-as3:
         ipv4_address: 10.2.3.3
-      net-as3-as4:
-        ipv4_address: 10.3.4.3
+      #net-as3-as4:
+      #  ipv4_address: 10.3.4.3
     cap_add:
         - ALL
     sysctls:
@@ -113,10 +118,10 @@ services:
     image: openbgpd/openbgpd:8.3
     container_name: router-4
     networks:
-      #net-as2-as4:
-      #  ipv4_address: 10.2.4.4
-      net-as3-as4:
-        ipv4_address: 10.3.4.4
+      net-as2-as4:
+        ipv4_address: 10.2.4.4
+      net-as1-as4:
+        ipv4_address: 10.1.4.4
       net-c2-as4:
         ipv4_address: 10.202.4.1
     cap_add:
