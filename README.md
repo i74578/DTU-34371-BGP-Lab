@@ -21,7 +21,7 @@ You can try to access Host 2 at [http://10.202.4.202](http://10.202.4.202) befor
 To deploy the DoS attack run this command
 
 ```
-docker exec -it router-2 dos-attack
+docker exec -it router-2 dos
 ```
 
 
