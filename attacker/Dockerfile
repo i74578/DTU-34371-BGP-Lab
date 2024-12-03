@@ -9,6 +9,6 @@ RUN chmod +x /usr/local/bin/dos
 COPY ./scripts/restore /usr/local/bin/restore
 RUN chmod +x /usr/local/bin/restore
 
-COPY ./index.html /usr/share/nginx/html/
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./attacker/index.html /usr/share/nginx/html/
+COPY ./attacker/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

@@ -72,7 +72,7 @@ services:
   router-2:
     build: 
         context: .
-        dockerfile: Dockerfile
+        dockerfile: ./attacker/Dockerfile
     image: openbgpd-iptables
     container_name: router-2
     networks:
@@ -152,7 +152,10 @@ services:
                 while true; do sleep 3600; done"
 
   host-2:
-    image: nginx:alpine
+    build:
+        context: .
+        dockerfile: ./server/Dockerfile
+    image: img_host2
     container_name: host-2
     networks:
       net-c2-as4:
