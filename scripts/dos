@@ -1,3 +1,2 @@
 #!/bin/sh
-
 ip route del 10.202.4.0/24
