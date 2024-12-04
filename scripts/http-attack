@@ -1,3 +1,2 @@
 #!/bin/sh
-iptables -t nat -F
-iptables -t nat -A PREROUTING -d 10.202.4.202 -p tcp -j DNAT --to-destination 10.1.2.2:80
+ip addr add 10.202.4.202/32 dev lo
