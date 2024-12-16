@@ -14,31 +14,16 @@ sudo docker compose up
 Host 1 runs a web browser available on [localhost:3000](http://localhost:3000). From this browser we can try to access the Host 2 http server at [http://10.202.4.202](http://10.202.4.202) in order to demonstrate the 2 attacks.
 
 ## DOS attack
-
-
 You can try to access Host 2 at [http://10.202.4.202](http://10.202.4.202) before and after the DoS attack to showcase that the service is unreachable.
-
-To deploy the DoS attack run this command
-
+The DoS attack is performed by making router 2 anonce that it is directly connected to 10.202.4.202/32. This is attack is performed by uncommenting the following line inside the config/bgpd2.conf
 ```
-docker exec -it router-2 dos
+network 10.202.4.202/32
 ```
-
-
-To *stop* the attack run
-```
-docker exec -it router-2 restore
-```
-
+The router or BGP service has to be restarted after this change is made.
 
 ## HTTP Hijack
 
-To demostrate the http hijacking (redirection) you need to make sure that the system is 'restored' from the DoS attack 
-
-```
-docker exec -it router-2 restore
-```
-
+To demostrate the http hijacking (redirection) you need to make sure that the DOS attack is active and working.
 To initiate the attack run
 
 ```
